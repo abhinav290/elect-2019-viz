@@ -11,3 +11,28 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+path {
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+}
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+    color:black;					
+    padding: 2px;				
+    font: 12px sans-serif;
+    text-align: left;
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+
