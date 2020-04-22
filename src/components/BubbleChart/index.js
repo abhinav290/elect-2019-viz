@@ -17,9 +17,11 @@ class BubbleChart extends React.Component {
      this.renderGraph()
     }
     render = () => {            
-        return (<div id="bubbleChart">
+        return (<div>
         {this.renderDropdown()}
-        {this.renderGraph()}
+        <div id="bubbleChart">
+            {this.renderGraph()}
+        </div>
         </div>)
     }
     renderGraph = ()=> {
@@ -191,6 +193,7 @@ class BubbleChart extends React.Component {
 
             renderDropdown = ()=> {
                 const attributes= [EXCEL_COLUMNS.CONSTITUENCY, EXCEL_COLUMNS.PARTY, EXCEL_COLUMNS.WINNER, EXCEL_COLUMNS.EDUCATION, EXCEL_COLUMNS.CATEGORY, EXCEL_COLUMNS.GENDER]
+                console.log("Dropdown")
                 return(
                     <Autocomplete
                     id="attribute-selector"
