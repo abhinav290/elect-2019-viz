@@ -1,7 +1,9 @@
 import React from "react";
-import {EXCEL_COLUMNS, getConstituencyData, getStateWiseParty, getPartyLegend} from "../../utils/consts";
+import {EXCEL_COLUMNS, getConstituencyData, getBarChartData, getBubbleChartData} from "../../utils/consts";
 import * as d3 from 'd3'
 import * as d3arr from 'd3-array'
+import { Autocomplete } from "@material-ui/lab";
+import { TextField } from "@material-ui/core";
 
 class BubbleChart extends React.Component {
     static defaultProps = {
@@ -9,24 +11,22 @@ class BubbleChart extends React.Component {
     }
     state= {
         stateKey: null,
+        column: EXCEL_COLUMNS.CONSTITUENCY
     }
     componentDidMount= () => {
      this.renderGraph()
     }
     render = () => {            
-        return (<div id="bubbleChart">)
+        return (<div id="bubbleChart">
+        {this.renderDropdown()}
         {this.renderGraph()}
         </div>)
     }
     renderGraph = ()=> {
-
-        let n = 200 // number of nodes
-        let  m=10
-        let color = d3.scaleOrdinal(d3.range(m), d3.schemeCategory10)
         let  height=600
         const {electionData, colorLegend} = this.props
-        const state='Rajasthan'
-        const data = getConstituencyData(electionData)
+        const {column}= this.state
+        const data = getBubbleChartData(electionData, column)
         function centroid(nodes) {
             let x = 0;
             let y = 0;
@@ -50,7 +50,7 @@ class BubbleChart extends React.Component {
                 function forceCollide() {
                     const alpha = 0.4; // fixed for greater rigidity!
                     const padding1 = 1; // separation between same-color nodes
-                    const padding2 = 5; // separation between different-color nodes
+                    const padding2 = 25; // separation between different-color nodes
                     let nodes;
                     let maxRadius;
                     
@@ -73,7 +73,8 @@ class BubbleChart extends React.Component {
                                             q.data.y += y
                                         }
                                     }
-                                } while (q = q.next);
+                                } 
+                                while(q = q.next)
                                 return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
                             });
                         }
@@ -116,7 +117,7 @@ class BubbleChart extends React.Component {
                 let svg = d3.select("#bubbleChart")
                 let div= d3.select(".tooltip")
                 svg.selectAll("*").remove()
-                svg = svg.append("svg").attr("width", width).attr("height", height).style("background", "green")
+                svg = svg.append("svg").attr("width", width).attr("height", height).style("background", "#d3d3d3")
                 
                 const node = svg.append("g")
                 .selectAll("circle")
@@ -127,13 +128,14 @@ class BubbleChart extends React.Component {
                 .attr("fill", d => {
                     return colorLegend[d.data[EXCEL_COLUMNS.PARTY]]
                 })
+                .style("opacity",0.9)
                 .style("stroke", "black")
-                .style("stroke-width",  d => d.data[EXCEL_COLUMNS.WINNER] === "1" ? "2px" : "0px")
+                .style("stroke-width",  d => d.data[EXCEL_COLUMNS.WINNER] === "1" ? "4px" : "0px")
                 .on("mouseover", d => {
                     div.transition()		
                         .duration(200)		
                         .style("opacity", .9);		
-                    div	.html(this.generateTooltipText(d.data))	
+                    div.html(this.generateTooltipText(d.data))	
                         .style("left", (d3.event.pageX) + "px")		
                         .style("top", (d3.event.pageY - 28) + "px");	
         
@@ -187,8 +189,24 @@ class BubbleChart extends React.Component {
                 .on("end", dragended);
             }
 
+            renderDropdown = ()=> {
+                const attributes= [EXCEL_COLUMNS.CONSTITUENCY, EXCEL_COLUMNS.PARTY, EXCEL_COLUMNS.WINNER, EXCEL_COLUMNS.EDUCATION, EXCEL_COLUMNS.CATEGORY, EXCEL_COLUMNS.GENDER]
+                return(
+                    <Autocomplete
+                    id="attribute-selector"
+                      options={attributes}
+                      value={this.state.column}
+                      style={{ width: 300 }}
+                      onChange = {(elem, val)=>{
+                          this.setState({column: val})} }
+                      renderInput={(params) => <TextField {...params} label="Select Attribute" />
+                      }
+                      />
+                )
+            }
+
             generateTooltipText= (data)=> {
-                return `
+                return `${data[EXCEL_COLUMNS.WINNER] === "1"?"<b>WINNER</b><br/>":""}
                 <b>${EXCEL_COLUMNS.NAME}:</b> ${data[EXCEL_COLUMNS.NAME]} <br/>
                 <b>${EXCEL_COLUMNS.PARTY}</b>: ${data[EXCEL_COLUMNS.PARTY]} <br/>
                 <b>${EXCEL_COLUMNS.CONSTITUENCY}:</b> ${data[EXCEL_COLUMNS.CONSTITUENCY]} <br/>

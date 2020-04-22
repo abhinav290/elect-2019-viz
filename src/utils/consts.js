@@ -213,10 +213,10 @@ export const stateWiseVoting = (data, state) =>{
             return partyCountMap
         }
 
-        export const getConstituencyData = (data) => {
+        export const getBubbleChartData = (data, column) => {
             let constituencyMap={}
             for(let i=0;i<data.length;i++) {
-                let constituency= data[i][EXCEL_COLUMNS.CONSTITUENCY]
+                let constituency= data[i][column]
                 if(!constituencyMap.hasOwnProperty(constituency)) {
                     constituencyMap[constituency]= []
                 }

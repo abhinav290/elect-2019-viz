@@ -9,7 +9,7 @@ class Legend extends React.Component {
     }
 
     shouldComponentUpdate = (nextProps)=> {
-        if(this.props.colorLegend != nextProps.colorLegend) return true
+        if(this.props.colorLegend !== nextProps.colorLegend) return true
         return false
     }
 
@@ -20,11 +20,9 @@ class Legend extends React.Component {
     renderLegend = ()=> {
         const {colorLegend, width, height} = this.props
         let legend = d3.select(this.refs.legend)
-        console.log(legend)
         legend.selectAll("*").remove()
         legend = legend.append("svg").attr("width", width).attr("height", height)
         const verticalSpace =18
-        console.log('Render legend')
 
 
 

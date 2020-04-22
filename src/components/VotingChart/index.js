@@ -16,12 +16,12 @@ class VotingChart extends React.Component {
         return (<div id="voteChart"></div>)
     }
     shouldComponentUpdate = (nextProps)=> {
-        if(this.props.stateKey != nextProps.stateKey) return true
+        if(this.props.stateKey !== nextProps.stateKey) return true
         return false
     }
     
     renderBars = () => {
-        const {colorLegend, electionData, stateKey}  =this.props
+        const {electionData, stateKey}  =this.props
         let data = null
         const colorFunc= this.colorBars
         if(stateKey !=null) {

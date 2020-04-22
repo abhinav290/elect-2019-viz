@@ -22,7 +22,7 @@ class VotingMap extends React.Component {
         this.loadData()
     }
     shouldComponentUpdate = (nextProps, nextState)=> {
-        if(this.state.countryData !=nextState.countryData) return true
+        if(this.state.countryData !== nextState.countryData) return true
         return false
     }
 
@@ -30,18 +30,13 @@ class VotingMap extends React.Component {
     renderMap = () => {    
         const { width, height } = this.props
         const states = this.state.countryData 
-        const {electionData, colorLegend, clickFunc}=this.props
+        const {electionData, colorLegend}=this.props
         
         let stateVotingMap = utils.stateVoting(electionData)
         
     //Adding tooltip
-        d3.select(".tooltip").remove()
-        const tooltipDiv = d3.select("body")
-            .append("div")
-            .attr("class", "tooltip")				
-            .style("opacity", 0);
-
-  
+        const tooltipDiv = d3.select(".tooltip")
+        tooltipDiv.selectAll("*").remove()  
         const projection = d3.geoMercator().scale(1150).center([82.9629, 23.5937]).translate([width/2, height/2])      
         const path = d3.geoPath(projection)
         const svg = d3.select(this.refs.map)
@@ -74,7 +69,7 @@ class VotingMap extends React.Component {
             div.transition()		
                 .duration(200)		
                 .style("opacity", .9);		
-            div	.html( "<br/>"  + name)	
+            div.html( "<br/>"  + name)	
                 .style("left", (d3.event.pageX) + "px")		
                 .style("top", (d3.event.pageY - 28) + "px");	
 

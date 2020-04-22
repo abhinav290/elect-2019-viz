@@ -32,7 +32,8 @@ class CountryMap extends React.Component {
         statePartyMap = getPartyLegendState(colorLegend, statePartyMap)
         
     //Adding tooltip
-        const tooltipDiv = d3.select(".tooltip")  
+        const tooltipDiv = d3.select(".tooltip")
+        tooltipDiv.selectAll("*").remove()
         const projection = d3.geoMercator().scale(1150).center([82.9629, 23.5937]).translate([width/2, height/2])      
         const path = d3.geoPath(projection)
         const svg = d3.select(this.refs.map)
@@ -63,7 +64,7 @@ class CountryMap extends React.Component {
             div.transition()		
                 .duration(200)		
                 .style("opacity", .9);		
-            div	.html( generateTooltipText(name, colorlegend[name]))	
+            div.html(generateTooltipText(name, colorlegend[name]))	
                 .style("left", (d3.event.pageX) + "px")		
                 .style("top", (d3.event.pageY - 28) + "px");	
 
