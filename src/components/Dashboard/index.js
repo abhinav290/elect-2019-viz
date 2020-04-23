@@ -18,7 +18,7 @@ class DashboardContainer extends React.Component {
     state = {
         electionData: null,
         stateKey: null,
-        tab: "Polls"
+        tab: "Results"
     }
     componentDidMount= ()=> {
         this.loadData()
