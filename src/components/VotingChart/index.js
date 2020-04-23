@@ -33,7 +33,7 @@ class VotingChart extends React.Component {
         let dataArr=[]       
         for (let stateName in data) dataArr.push({stateName, vote: data[stateName]})
 
-        const margin = {top: 20, right: 40, bottom: 30, left: 120}
+        const margin = {top: 20, right: 40, bottom: 50, left: 120}
         let width=600
         let height = margin.top + margin.bottom +  (dataArr.length*18)
         
@@ -95,6 +95,12 @@ class VotingChart extends React.Component {
         g.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
+        svg.append("text")             
+        .attr("transform",
+              "translate(" + (width/2 +margin.left)  + " ," + 
+                             (height + margin.top + 30) + ")")
+        .style("text-anchor", "middle")
+        .text("Poll Percentage");
         
         // add the y Axis
         g.append("g")

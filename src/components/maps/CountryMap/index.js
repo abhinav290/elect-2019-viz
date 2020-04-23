@@ -37,6 +37,7 @@ class CountryMap extends React.Component {
         const projection = d3.geoMercator().scale(1150).center([82.9629, 23.5937]).translate([width/2, height/2])      
         const path = d3.geoPath(projection)
         const svg = d3.select(this.refs.map)
+        svg.selectAll("*").remove()
         const g = svg.append("g")
         
 

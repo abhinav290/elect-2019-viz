@@ -45,8 +45,8 @@ class VotingMap extends React.Component {
         const radCalc = d3.scaleSqrt().domain([40,90]).range([10,25])
 
         states.forEach(state => {
-            this.renderState(g, state, path, tooltipDiv)
-            this.renderBubble(colorLegend, stateVotingMap, g, state, path, radCalc)
+            this.renderState(g, state, path)
+            this.renderBubble(colorLegend, stateVotingMap, g, state, path, radCalc, tooltipDiv)
 
         })
         states.forEach(state => {
@@ -57,7 +57,7 @@ class VotingMap extends React.Component {
          
 
     //Individual state component.
-    renderState = ( g, state, path, div)=> {
+    renderState = ( g, state, path)=> {
         //State area and color
         const name = utils.getStateName(state.properties.st_nm)
         g.append("path").datum(state).attr("d", path)
@@ -65,20 +65,6 @@ class VotingMap extends React.Component {
         .style("stroke", "#000000")
         .style("stroke-width", "1px")
         .on("click", () => this.onClickState(name))
-        .on("mouseover", function (d) {
-            div.transition()		
-                .duration(200)		
-                .style("opacity", .9);		
-            div.html( "<br/>"  + name)	
-                .style("left", (d3.event.pageX) + "px")		
-                .style("top", (d3.event.pageY - 28) + "px");	
-
-        })
-        .on("mouseout", function(d) {		
-            div.transition()		
-                .duration(500)		
-                .style("opacity", 0)	
-            })
     }
 
     renderStateLabel = ( g, state, path)=> {
@@ -96,18 +82,31 @@ class VotingMap extends React.Component {
         .text(name)
      }
 
-     renderBubble = (colorLegend, stateVotingMap, g, state, path, radCalc)=> {
+     renderBubble = (colorLegend, stateVotingMap, g, state, path, radCalc, div)=> {
         let name = utils.getStateName(state.properties.st_nm)
+        let perc = (stateVotingMap[name]['VOTES']/stateVotingMap[name]['TOTAL_ELECTORS'])*100
+        let tooltip= this.generateTooltipText
 
         g.append("circle").datum(state)
         .attr("class", "bubble")
         .attr("fill", colorLegend[name]).style("opacity","0.8")
         .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
-        .attr("r", function(d) {
-            let perc = (stateVotingMap[name]['VOTES']/stateVotingMap[name]['TOTAL_ELECTORS'])*100
-            return radCalc(perc)
-            
-        })     }
+        .attr("r", radCalc(perc))
+        .on("mouseover", function (d) {
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div.html(tooltip(name, perc))	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+
+        })
+        .on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0)	
+            })
+     }
 
     //Load the geojson to display map.
     loadData = async ()=> {
@@ -121,6 +120,13 @@ class VotingMap extends React.Component {
     onClickState = (name) => {
         this.props.clickFunc(name)
     }
+
+    generateTooltipText= (name, perc)=> {
+
+        return `<b> STATE: </b> ${name}<br/>
+        <b> POLL PERCENTAGE: </b> ${perc}%`
+    }
+
 
     render() {
         const { width, height } = this.props

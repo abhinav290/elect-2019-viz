@@ -3,8 +3,7 @@ import * as d3 from 'd3'
 
 class Legend extends React.Component {
     static defaultProps = {
-        width: 200,
-        height:700,
+        width: 400,
         colorLegend: null
     }
 
@@ -18,32 +17,34 @@ class Legend extends React.Component {
     }
 
     renderLegend = ()=> {
-        const {colorLegend, width, height} = this.props
+        const {colorLegend, width} = this.props
         let legend = d3.select(this.refs.legend)
         legend.selectAll("*").remove()
-        legend = legend.append("svg").attr("width", width).attr("height", height)
-        const verticalSpace =18
 
-
+        const verticalSpace =16
+        const squareSize= 10
+        console.log(Object.keys(colorLegend).length)
+        const height = Object.keys(colorLegend).length*(verticalSpace)
+        legend = legend.append("svg").attr("width", width).attr("height", height).attr("class", "legend")
 
         //Display colorlegend
         Object.keys(colorLegend).forEach((key, i) => {      
         
         legend.append("rect")
-        .attr("width", 13)
-        .attr("height", 13)
-        .attr("x",20)
+        .attr("width", squareSize)
+        .attr("height", squareSize)
+        .attr("x",0)
         .attr("y", function () {
-            return 40 + (i*verticalSpace)
+            return (i*verticalSpace)
         })
         .style("fill", function () { return colorLegend[key]})
         
         legend.append("text")
-        .attr("x",50)
+        .attr("x",30)
         .attr("y", function () {
-            return 52 + (i*verticalSpace)
+            return squareSize + (i*verticalSpace)
         })
-        .text(key).style("color","white")
+        .text(key)
         })
     }
 

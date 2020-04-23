@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: white;
 }
 
 code {
@@ -23,6 +24,14 @@ path {
   flex: 50%;
 }
 
+svg text {
+fill: black  ;
+font-size: 1em;
+}
+
+svg.legend text {
+  font-size: 0.9em;
+}
 div.tooltip {	
     position: absolute;			
     text-align: center;			

@@ -1,9 +1,11 @@
 import React from "react";
-import {EXCEL_COLUMNS, getConstituencyData, getBarChartData, getBubbleChartData} from "../../utils/consts";
+import {EXCEL_COLUMNS, getBubbleChartData} from "../../utils/consts";
 import * as d3 from 'd3'
 import * as d3arr from 'd3-array'
 import { Autocomplete } from "@material-ui/lab";
 import { TextField } from "@material-ui/core";
+import Legend from "../Legend";
+import BubbleLegend from "../Legend/BubbleLegend";
 
 class BubbleChart extends React.Component {
     static defaultProps = {
@@ -17,12 +19,43 @@ class BubbleChart extends React.Component {
      this.renderGraph()
     }
     render = () => {            
-        return (<div>
-        {this.renderDropdown()}
-        <div id="bubbleChart">
-            {this.renderGraph()}
+        return (
+        <div>
+        <div className="row">
+            <div className="column">
+                <h1>{this.props.stateKey}</h1>
+            </div>
         </div>
-        </div>)
+        <div className="row">
+            <div className="column">
+                <h3>Clusters of candidates according to {this.state.column.toLowerCase()}</h3>
+            </div>  
+            <div className="column">
+                {this.renderDropdown()}
+            </div>
+        </div>
+        <div className="row" style={{marginLeft: "50px", marginBottom: "200px"}}>
+            <div className="column">
+                <div id="bubbleChart">
+                    {this.renderGraph()}
+                </div>
+            </div>
+            <div className="column" style={{marginLeft: "50px"}}>
+                <div className="row">
+                <h4>Size and Stroke Legend for Candidates</h4>
+                </div>
+                <div className="row">
+                    <BubbleLegend stroke={true}/>
+                </div>
+                <div className="row">
+                    <h4>Color Legend for Parties</h4>
+                </div>
+                <div className="row">
+                    <Legend colorLegend={this.props.colorLegend}/>
+                </div>
+            </div>
+        </div>
+    </div>)
     }
     renderGraph = ()=> {
         let  height=600
@@ -195,14 +228,15 @@ class BubbleChart extends React.Component {
                 const attributes= [EXCEL_COLUMNS.CONSTITUENCY, EXCEL_COLUMNS.PARTY, EXCEL_COLUMNS.WINNER, EXCEL_COLUMNS.EDUCATION, EXCEL_COLUMNS.CATEGORY, EXCEL_COLUMNS.GENDER]
                 console.log("Dropdown")
                 return(
+                        
                     <Autocomplete
                     id="attribute-selector"
                       options={attributes}
                       value={this.state.column}
-                      style={{ width: 300 }}
+                      style={{ width: 200 }}
                       onChange = {(elem, val)=>{
                           this.setState({column: val})} }
-                      renderInput={(params) => <TextField {...params} label="Select Attribute" />
+                      renderInput={(params) => <TextField {...params} label="Group candidates by:" />
                       }
                       />
                 )
@@ -215,6 +249,7 @@ class BubbleChart extends React.Component {
                 <b>${EXCEL_COLUMNS.CONSTITUENCY}:</b> ${data[EXCEL_COLUMNS.CONSTITUENCY]} <br/>
                 <b>${EXCEL_COLUMNS.STATE}:</b> ${data[EXCEL_COLUMNS.STATE]} <br/>
                 <b>${EXCEL_COLUMNS.AGE}:</b> ${data[EXCEL_COLUMNS.AGE]} <br/>
+                <b>${EXCEL_COLUMNS.GENDER}:</b> ${data[EXCEL_COLUMNS.GENDER]}<br/>
                 <b>${EXCEL_COLUMNS.CATEGORY}:</b> ${data[EXCEL_COLUMNS.CATEGORY]} <br/>
                 <b>${EXCEL_COLUMNS.EDUCATION}:</b> ${data[EXCEL_COLUMNS.EDUCATION]} <br/>
                 `
