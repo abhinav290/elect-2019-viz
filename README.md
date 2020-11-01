@@ -1,3 +1,5 @@
+The project was built in Javascript mainly ReactJS and D3.js to visualize the outcome of Lok Sabha Elections that were held in India in 2019. This project implements various visualization techniques and creates a responsive single page dashboard.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
